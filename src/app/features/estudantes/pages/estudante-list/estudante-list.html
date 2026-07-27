@@ -1,0 +1,28 @@
+<section class="page">
+  <header class="page-header">
+    <div><span class="eyebrow">GESTÃO ACADÊMICA</span><h2>Estudantes</h2><p>Gerencie os estudantes cadastrados.</p></div>
+    <a routerLink="/estudantes/novo" class="button-primary">Novo estudante</a>
+  </header>
+  @if (carregando) { <p>Carregando estudantes...</p> }
+  @if (mensagemErro) { <div class="alert-error">{{ mensagemErro }}</div> }
+  @if (!carregando && estudantes.length === 0) { <div class="empty-state">Nenhum estudante cadastrado.</div> }
+  @if (estudantes.length > 0) {
+    <div class="table-container">
+      <table>
+        <thead><tr><th>Nome</th><th>E-mail</th><th>Cadastro</th><th>Ações</th></tr></thead>
+        <tbody>
+          @for (estudante of estudantes; track estudante.id) {
+            <tr>
+              <td>{{ estudante.nomeCompleto }}</td>
+              <td>{{ estudante.email }}</td>
+              <td>{{ estudante.dataCadastro | date:'dd/MM/yyyy' }}</td>
+              <td class="actions">
+                <a [routerLink]="['/estudantes', estudante.id]">Ver detalhes</a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
