@@ -1,0 +1,40 @@
+<section class="page">
+  <header class="page-header"><div><h2>Nova inscrição</h2><p>Vincule um estudante a um curso.</p></div></header>
+  @if (mensagemErro) { <div class="alert-error">{{ mensagemErro }}</div> }
+  @if (carregando) { <p>Carregando opções...</p> }
+  @else {
+    <form class="form-card" [formGroup]="form" (ngSubmit)="salvar()">
+      <div class="form-card-header">
+        <span class="form-card-icon" aria-hidden="true">I</span>
+        <div><h3>Dados da inscrição</h3><p>Escolha o estudante, o curso e a situação inicial da matrícula.</p></div>
+      </div>
+      <div class="form-section">
+        <label>Estudante
+          <select formControlName="estudanteId">
+            <option [ngValue]="0">Selecione um estudante</option>
+            @for (estudante of estudantes; track estudante.id) { <option [ngValue]="estudante.id">{{ estudante.nomeCompleto }}</option> }
+          </select>
+        </label>
+        @if (form.controls.estudanteId.touched && form.controls.estudanteId.invalid) { <small>Selecione um estudante.</small> }
+        <label>Curso
+          <select formControlName="cursoId">
+            <option [ngValue]="0">Selecione um curso</option>
+            @for (curso of cursos; track curso.id) { <option [ngValue]="curso.id">{{ curso.titulo }}</option> }
+          </select>
+        </label>
+        @if (form.controls.cursoId.touched && form.controls.cursoId.invalid) { <small>Selecione um curso.</small> }
+        <label>Status
+          <select formControlName="status">
+            <option [ngValue]="Status.ATIVO">Ativa</option>
+            <option [ngValue]="Status.CANCELADO">Cancelada</option>
+          </select>
+        </label>
+        <p class="field-hint">A inscrição ativa permite acompanhar normalmente a matrícula.</p>
+      </div>
+      <div class="form-actions">
+        <a routerLink="/inscricoes" class="button-secondary">Cancelar</a>
+        <button class="button-primary" type="submit" [disabled]="salvando">{{ salvando ? 'Salvando...' : 'Criar inscrição' }}</button>
+      </div>
+    </form>
+  }
+</section>

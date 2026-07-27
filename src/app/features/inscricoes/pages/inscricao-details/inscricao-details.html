@@ -1,0 +1,39 @@
+<section class="page">
+  @if (mensagemErro) { <div class="alert-error">{{ mensagemErro }}</div> }
+  @if (carregando) { <p>Carregando inscrição...</p> }
+  @if (inscricao) {
+    <header class="page-header">
+      <div>
+        <span class="eyebrow">DETALHES DA INSCRIÇÃO</span>
+        <h2>{{ estudante }}</h2>
+        <p>Consulte os dados desta matrícula.</p>
+      </div>
+      <a class="button-secondary" routerLink="/inscricoes">← Voltar para inscrições</a>
+    </header>
+
+    <article class="details-card">
+      <div class="details-hero">
+        <div class="details-icon">✓</div>
+        <div>
+          <span>INSCRIÇÃO #{{ inscricao.id }}</span>
+          <h3>{{ estudante }}</h3>
+          <p>{{ curso }}</p>
+        </div>
+        <span class="status" [class.cancelado]="inscricao.status === Status.CANCELADO">
+          {{ inscricao.status === Status.ATIVO ? 'Ativa' : 'Cancelada' }}
+        </span>
+      </div>
+
+      <dl class="stats">
+        <div><dt>Estudante</dt><dd>{{ estudante }}</dd><small>ID {{ inscricao.estudanteId }}</small></div>
+        <div><dt>Curso</dt><dd>{{ curso }}</dd><small>ID {{ inscricao.cursoId }}</small></div>
+        <div><dt>Data da matrícula</dt><dd>{{ inscricao.dataMatricula | date:'dd/MM/yyyy' }}</dd><small>Data de inscrição</small></div>
+      </dl>
+
+      <footer class="details-actions">
+        <div><strong>Ações da inscrição</strong><small>Exclua este vínculo permanentemente.</small></div>
+        <button class="button-danger" type="button" (click)="excluir()">Excluir inscrição</button>
+      </footer>
+    </article>
+  }
+</section>

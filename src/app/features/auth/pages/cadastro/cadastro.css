@@ -1,0 +1,12 @@
+:host { display: block; }
+.auth-page { display: grid; min-height: 100vh; place-items: center; padding: 28px; }
+.auth-card { display: flex; width: min(480px, 100%); flex-direction: column; gap: 17px; padding: 40px; border: 1px solid rgba(226,232,240,.8); border-radius: 22px; background: white; box-shadow: 0 24px 70px rgba(30,41,59,.13); }
+h2 { margin: 0; color: #111827; font-size: 2.1rem; letter-spacing: -1px; }
+p { margin: 6px 0 0; color: #6b7280; }
+label { display: flex; flex-direction: column; gap: 8px; color: #334155; font-size: 13px; font-weight: 700; }
+input { padding: 12px 13px; border: 1px solid #d9dee7; border-radius: 10px; outline: 0; background: #fbfcfe; }
+input:focus { border-color: #60a5fa; background: white; box-shadow: 0 0 0 4px #dbeafe; }
+small { margin-top: -10px; color: #dc2626; }
+.auth-link { text-align: center; }
+.auth-link a { color: #2563eb; font-weight: 600; }
+@media (max-width: 520px) { .auth-card { padding: 28px 22px; } }
