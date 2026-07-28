@@ -5,8 +5,7 @@ import { finalize } from 'rxjs';
 import { AuthService } from '../../../../core/auth/auth.service';
 
 function senhasIguais(control: AbstractControl): ValidationErrors | null {
-  return control.get('password')?.value === control.get('rePassword')?.value
-    ? null : { senhasDiferentes: true };
+  return control.get('password')?.value === control.get('rePassword')?.value ? null : { senhasDiferentes: true };
 }
 
 @Component({
@@ -39,9 +38,7 @@ export class Cadastro {
       next: () => this.router.navigate(['/login'], { queryParams: { cadastrado: true } }),
       error: erro => {
         console.error('Erro no cadastro:', erro);
-        this.mensagemErro = erro.status === 400
-          ? 'Não foi possível cadastrar. Verifique os dados ou escolha outro usuário.'
-          : 'Não foi possível realizar o cadastro.';
+        this.mensagemErro = erro.status === 400 ? 'Não foi possível cadastrar. Verifique os dados ou escolha outro usuário.' : 'Não foi possível realizar o cadastro.';
         this.cdr.markForCheck();
       }
     });

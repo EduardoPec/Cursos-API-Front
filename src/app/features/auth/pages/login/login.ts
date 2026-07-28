@@ -43,9 +43,7 @@ export class Login {
       },
       error: erro => {
         console.error('Erro no login:', erro);
-        this.mensagemErro = erro.status === 401
-          ? 'Usuário ou senha inválidos.'
-          : 'Não foi possível entrar. Verifique se a API está disponível.';
+        this.mensagemErro = erro.status === 401 ? 'Usuário ou senha inválidos.' : 'Não foi possível entrar. Verifique se a API está disponível.';
         this.cdr.markForCheck();
       }
     });

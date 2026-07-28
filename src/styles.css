@@ -51,6 +51,20 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .alert-error, .alert-success { padding: 14px 16px; border: 1px solid #fecaca; border-radius: 11px; background: #fff5f5; color: #b91c1c; font-size: 14px; }
 .alert-success { border-color: #bbf7d0; background: #f0fdf4; color: #15803d; }
 .empty-state { padding: 65px 30px; border: 1px dashed #cbd5e1; border-radius: 18px; background: rgba(255,255,255,.65); color: var(--muted); text-align: center; }
+.id-search-panel { padding: 18px 20px; border: 1px solid var(--border); border-radius: 14px; background: white; box-shadow: 0 6px 22px rgba(15,23,42,.04); }
+.id-search-panel > label { display: block; margin-bottom: 7px; color: #475569; font-size: 11px; font-weight: 800; }
+.id-search-row { display: flex; align-items: center; gap: 10px; }
+.id-search-input { position: relative; width: min(380px, 100%); }
+.id-search-input svg { position: absolute; top: 50%; left: 13px; width: 18px; color: #94a3b8; pointer-events: none; transform: translateY(-50%); }
+.id-search-input input { width: 100%; min-height: 43px; padding: 10px 13px 10px 40px; border: 1px solid #d9dee7; border-radius: 10px; outline: none; background: #f9fafc; color: #172033; font-size: 13px; transition: border-color .15s, box-shadow .15s, background .15s; }
+.id-search-input input::placeholder { color: #a0a9b8; }
+.id-search-input:focus-within svg { color: #2563eb; }
+.id-search-input input:focus { border-color: #60a5fa; background: white; box-shadow: 0 0 0 4px #dbeafe; }
+.id-search-row > button, .filter-empty button { padding: 8px 5px; border: 0; background: transparent; color: #2563eb; font-size: 12px; font-weight: 700; cursor: pointer; }
+.table-id { color: #2563eb; font-size: 12px; font-weight: 800; }
+.filter-empty { display: flex; align-items: center; flex-direction: column; gap: 7px; }
+.filter-empty strong { color: #334155; }
+.filter-empty span { font-size: 13px; }
 
 .table-container { overflow: hidden; overflow-x: auto; border: 1px solid var(--border); border-radius: 16px; background: white; box-shadow: 0 8px 28px rgba(15,23,42,.05); }
 table { width: 100%; border-collapse: collapse; }

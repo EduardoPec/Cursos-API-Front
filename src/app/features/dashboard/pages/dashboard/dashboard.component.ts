@@ -44,9 +44,7 @@ export class DashboardComponent implements OnInit {
         this.totalCursos = resultado.cursos.length;
         this.totalEstudantes = resultado.estudantes.length;
         this.totalInscricoes = resultado.inscricoes.length;
-        this.totalInscricoesCanceladas = resultado.inscricoes
-          .filter(inscricao => inscricao.status === Status.CANCELADO)
-          .length;
+        this.totalInscricoesCanceladas = resultado.inscricoes.filter(inscricao => inscricao.status === Status.CANCELADO).length;
         this.carregando = false;
         this.cdr.markForCheck();
       },

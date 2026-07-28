@@ -35,15 +35,11 @@ export class AuthService {
   });
   readonly usuario = computed(() => {
     const payload = this.payload();
-    return payload?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
-      ?? payload?.unique_name
-      ?? '';
+    return payload?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] ?? payload?.unique_name ?? '';
   });
   readonly roles = computed(() => {
     const payload = this.payload();
-    const role = payload?.['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
-      ?? payload?.role
-      ?? [];
+    const role = payload?.['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ?? payload?.role ?? [];
     return Array.isArray(role) ? role : [role];
   });
 

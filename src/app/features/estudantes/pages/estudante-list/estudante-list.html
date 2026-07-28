@@ -7,22 +7,35 @@
   @if (mensagemErro) { <div class="alert-error">{{ mensagemErro }}</div> }
   @if (!carregando && estudantes.length === 0) { <div class="empty-state">Nenhum estudante cadastrado.</div> }
   @if (estudantes.length > 0) {
-    <div class="table-container">
-      <table>
-        <thead><tr><th>Nome</th><th>E-mail</th><th>Cadastro</th><th>Ações</th></tr></thead>
-        <tbody>
-          @for (estudante of estudantes; track estudante.id) {
-            <tr>
-              <td>{{ estudante.nomeCompleto }}</td>
-              <td>{{ estudante.email }}</td>
-              <td>{{ estudante.dataCadastro | date:'dd/MM/yyyy' }}</td>
-              <td class="actions">
-                <a [routerLink]="['/estudantes', estudante.id]">Ver detalhes</a>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+    <div class="id-search-panel">
+      <label for="estudante-id">Buscar por ID</label>
+      <div class="id-search-row">
+        <div class="id-search-input">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m21 21-4.4-4.4m2.4-5.1a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input id="estudante-id" type="search" inputmode="numeric" [(ngModel)]="filtroId" placeholder="Digite o ID do estudante">
+        </div>
+        @if (filtroId) { <button type="button" (click)="limparFiltro()">Limpar</button> }
+      </div>
     </div>
+    @if (estudantesFiltrados.length === 0) {
+      <div class="empty-state filter-empty"><strong>Nenhum estudante encontrado</strong><span>Verifique o ID informado.</span><button type="button" (click)="limparFiltro()">Limpar filtro</button></div>
+    } @else {
+      <div class="table-container">
+        <table>
+          <thead><tr><th>ID</th><th>Nome</th><th>E-mail</th><th>Cadastro</th><th>Ações</th></tr></thead>
+          <tbody>
+            @for (estudante of estudantesFiltrados; track estudante.id) {
+              <tr>
+                <td><span class="table-id">#{{ estudante.id }}</span></td>
+                <td>{{ estudante.nomeCompleto }}</td>
+                <td>{{ estudante.email }}</td>
+                <td>{{ estudante.dataCadastro | date:'dd/MM/yyyy' }}</td>
+                <td class="actions"><a [routerLink]="['/estudantes', estudante.id]">Ver detalhes</a></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   }
 </section>

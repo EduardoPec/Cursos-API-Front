@@ -1,63 +1,42 @@
 <section class="page">
   <header class="page-header">
-    <div>
-      <span class="eyebrow">GESTÃO ACADÊMICA</span>
-      <h2>Cursos</h2>
-      <p>Gerencie os cursos disponíveis.</p>
-    </div>
-
-    <a routerLink="/cursos/novo" class="button-primary">
-      Novo curso
-    </a>
+    <div><span class="eyebrow">GESTÃO ACADÊMICA</span><h2>Cursos</h2><p>Gerencie os cursos disponíveis.</p></div>
+    <a routerLink="/cursos/novo" class="button-primary">Novo curso</a>
   </header>
-
-  @if (carregando) {
-    <p>Carregando cursos...</p>
-  }
-
-  @if (mensagemErro) {
-    <div class="alert-error">
-      {{ mensagemErro }}
-    </div>
-  }
-
-  @if (!carregando && cursos.length === 0) {
-    <div class="empty-state">
-      Nenhum curso cadastrado.
-    </div>
-  }
-
+  @if (carregando) { <p>Carregando cursos...</p> }
+  @if (mensagemErro) { <div class="alert-error">{{ mensagemErro }}</div> }
+  @if (!carregando && cursos.length === 0) { <div class="empty-state">Nenhum curso cadastrado.</div> }
   @if (cursos.length > 0) {
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Título</th>
-            <th>Categoria</th>
-            <th>Carga horária</th>
-            <th>Criação</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          @for (curso of cursos; track curso.id) {
-            <tr>
-              <td>{{ curso.titulo }}</td>
-              <td>{{ curso.categoria }}</td>
-              <td>{{ curso.cargaHoraria }} horas</td>
-              <td>
-                {{ curso.dataCriacao | date:'dd/MM/yyyy' }}
-              </td>
-              <td class="actions">
-                <a [routerLink]="['/cursos', curso.id]">
-                  Ver detalhes
-                </a>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+    <div class="id-search-panel">
+      <label for="curso-id">Buscar por ID</label>
+      <div class="id-search-row">
+        <div class="id-search-input">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m21 21-4.4-4.4m2.4-5.1a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input id="curso-id" type="search" inputmode="numeric" [(ngModel)]="filtroId" placeholder="Digite o ID do curso">
+        </div>
+        @if (filtroId) { <button type="button" (click)="limparFiltro()">Limpar</button> }
+      </div>
     </div>
+    @if (cursosFiltrados.length === 0) {
+      <div class="empty-state filter-empty"><strong>Nenhum curso encontrado</strong><span>Verifique o ID informado.</span><button type="button" (click)="limparFiltro()">Limpar filtro</button></div>
+    } @else {
+      <div class="table-container">
+        <table>
+          <thead><tr><th>ID</th><th>Título</th><th>Categoria</th><th>Carga horária</th><th>Criação</th><th>Ações</th></tr></thead>
+          <tbody>
+            @for (curso of cursosFiltrados; track curso.id) {
+              <tr>
+                <td><span class="table-id">#{{ curso.id }}</span></td>
+                <td>{{ curso.titulo }}</td>
+                <td>{{ curso.categoria }}</td>
+                <td>{{ curso.cargaHoraria }} horas</td>
+                <td>{{ curso.dataCriacao | date:'dd/MM/yyyy' }}</td>
+                <td class="actions"><a [routerLink]="['/cursos', curso.id]">Ver detalhes</a></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   }
 </section>
