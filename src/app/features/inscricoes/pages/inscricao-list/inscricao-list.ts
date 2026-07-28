@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize, forkJoin, timeout } from 'rxjs';
 import { InscricaoService } from '../../services/inscricao.service';
@@ -10,7 +11,7 @@ import { Status } from '../../../../shared/enums/Status.enum';
 
 @Component({
   selector: 'app-inscricao-list',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, FormsModule],
   templateUrl: './inscricao-list.html',
   styleUrl: './inscricao-list.css',
 })
@@ -24,9 +25,33 @@ export class InscricaoList implements OnInit {
   estudantes = new Map<number, string>();
   carregando = false;
   mensagemErro = '';
+  filtroId = '';
+  filtroEstudante = '';
   readonly Status = Status;
 
   ngOnInit(): void { this.carregar(); }
+
+  get inscricoesFiltradas(): ReadInscricaoDto[] {
+    const id = this.filtroId.trim();
+    const estudante = this.filtroEstudante.trim().toLocaleLowerCase('pt-BR');
+
+    return this.inscricoes.filter(inscricao => {
+      const nomeEstudante = this.estudantes.get(inscricao.estudanteId) ?? '';
+      return (!id || String(inscricao.id) === id)
+        && (!estudante
+          || String(inscricao.estudanteId).includes(estudante)
+          || nomeEstudante.toLocaleLowerCase('pt-BR').includes(estudante));
+    });
+  }
+
+  get possuiFiltros(): boolean {
+    return Boolean(this.filtroId.trim() || this.filtroEstudante.trim());
+  }
+
+  limparFiltros(): void {
+    this.filtroId = '';
+    this.filtroEstudante = '';
+  }
 
   carregar(): void {
     this.carregando = true;

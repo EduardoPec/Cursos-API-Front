@@ -3,27 +3,72 @@
     <div><span class="eyebrow">GESTÃO ACADÊMICA</span><h2>Inscrições</h2><p>Acompanhe as matrículas realizadas.</p></div>
     <a routerLink="/inscricoes/nova" class="button-primary">Nova inscrição</a>
   </header>
+
   @if (carregando) { <p>Carregando inscrições...</p> }
   @if (mensagemErro) { <div class="alert-error">{{ mensagemErro }}</div> }
   @if (!carregando && inscricoes.length === 0) { <div class="empty-state">Nenhuma inscrição cadastrada.</div> }
+
   @if (inscricoes.length > 0) {
-    <div class="table-container">
-      <table>
-        <thead><tr><th>Estudante</th><th>Curso</th><th>Status</th><th>Matrícula</th><th>Ações</th></tr></thead>
-        <tbody>
-          @for (inscricao of inscricoes; track inscricao.id) {
-            <tr>
-              <td>{{ estudantes.get(inscricao.estudanteId) || ('#' + inscricao.estudanteId) }}</td>
-              <td>{{ cursos.get(inscricao.cursoId) || ('#' + inscricao.cursoId) }}</td>
-              <td><span class="status" [class.cancelado]="inscricao.status === Status.CANCELADO">{{ inscricao.status === Status.ATIVO ? 'Ativa' : 'Cancelada' }}</span></td>
-              <td>{{ inscricao.dataMatricula | date:'dd/MM/yyyy' }}</td>
-              <td class="actions">
-                <a [routerLink]="['/inscricoes', inscricao.id]">Ver detalhes</a>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+    <div class="search-panel">
+      <div class="search-heading">
+        <div>
+          <strong>Buscar inscrições</strong>
+          <span>Filtre os registros por ID ou estudante.</span>
+        </div>
+        @if (possuiFiltros) {
+          <button type="button" class="clear-button" (click)="limparFiltros()">Limpar filtros</button>
+        }
+      </div>
+      <div class="search-grid">
+        <label>
+          ID da inscrição
+          <div class="search-input">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="m21 21-4.4-4.4m2.4-5.1a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <input type="search" inputmode="numeric" [(ngModel)]="filtroId" placeholder="Ex.: 12">
+          </div>
+        </label>
+        <label>
+          Estudante
+          <div class="search-input">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <input type="search" [(ngModel)]="filtroEstudante" placeholder="Nome ou ID do estudante">
+          </div>
+        </label>
+      </div>
+      <p class="result-count">
+        {{ inscricoesFiltradas.length }}
+        {{ inscricoesFiltradas.length === 1 ? 'inscrição encontrada' : 'inscrições encontradas' }}
+      </p>
     </div>
+
+    @if (inscricoesFiltradas.length === 0) {
+      <div class="empty-state search-empty">
+        <strong>Nenhum resultado encontrado</strong>
+        <span>Tente ajustar ou limpar os filtros de busca.</span>
+        <button type="button" (click)="limparFiltros()">Limpar filtros</button>
+      </div>
+    } @else {
+      <div class="table-container">
+        <table>
+          <thead><tr><th>ID</th><th>Estudante</th><th>Curso</th><th>Status</th><th>Matrícula</th><th>Ações</th></tr></thead>
+          <tbody>
+            @for (inscricao of inscricoesFiltradas; track inscricao.id) {
+              <tr>
+                <td><span class="id-badge">#{{ inscricao.id }}</span></td>
+                <td>{{ estudantes.get(inscricao.estudanteId) || ('#' + inscricao.estudanteId) }}</td>
+                <td>{{ cursos.get(inscricao.cursoId) || ('#' + inscricao.cursoId) }}</td>
+                <td><span class="status" [class.cancelado]="inscricao.status === Status.CANCELADO">{{ inscricao.status === Status.ATIVO ? 'Ativa' : 'Cancelada' }}</span></td>
+                <td>{{ inscricao.dataMatricula | date:'dd/MM/yyyy' }}</td>
+                <td class="actions"><a [routerLink]="['/inscricoes', inscricao.id]">Ver detalhes</a></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   }
 </section>

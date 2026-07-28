@@ -4,11 +4,12 @@ import { CursoService } from '../../services/curso.service';
 import { ReadCursoDto } from '../../../../shared/dtos/curso/ReadCursoDto';
 import { RouterLink } from "@angular/router";
 import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { finalize, timeout } from 'rxjs';
 
 @Component({
   selector: 'app-cursos-list',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, FormsModule],
   templateUrl: './cursos-list.html',
   styleUrl: './cursos-list.css'
 })
@@ -19,9 +20,19 @@ export class CursosList implements OnInit {
   cursos: ReadCursoDto[] = [];
   carregando = false;
   mensagemErro = '';
+  filtroId = '';
 
   ngOnInit(): void {
     this.carregarCursos();
+  }
+
+  get cursosFiltrados(): ReadCursoDto[] {
+    const id = this.filtroId.trim();
+    return id ? this.cursos.filter(curso => String(curso.id) === id) : this.cursos;
+  }
+
+  limparFiltro(): void {
+    this.filtroId = '';
   }
 
   carregarCursos(): void {
