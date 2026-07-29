@@ -1,12 +1,22 @@
 <section class="page">
   <header class="page-header">
-    <div><span class="eyebrow">GESTÃO ACADÊMICA</span><h2>Inscrições</h2><p>Acompanhe as matrículas realizadas.</p></div>
+    <div>
+      <span class="eyebrow">GESTÃO ACADÊMICA</span>
+      <h2>Inscrições</h2>
+      <p>Acompanhe as matrículas realizadas.</p>
+    </div>
     <a routerLink="/inscricoes/nova" class="button-primary">Nova inscrição</a>
   </header>
 
-  @if (carregando) { <p>Carregando inscrições...</p> }
-  @if (mensagemErro) { <div class="alert-error">{{ mensagemErro }}</div> }
-  @if (!carregando && inscricoes.length === 0) { <div class="empty-state">Nenhuma inscrição cadastrada.</div> }
+  @if (carregando) {
+    <p>Carregando inscrições...</p>
+  }
+  @if (mensagemErro) {
+    <div class="alert-error">{{ mensagemErro }}</div>
+  }
+  @if (!carregando && inscricoes.length === 0) {
+    <div class="empty-state">Nenhuma inscrição cadastrada.</div>
+  }
 
   @if (inscricoes.length > 0) {
     <div class="search-panel">
@@ -16,7 +26,9 @@
           <span>Filtre os registros por ID ou estudante.</span>
         </div>
         @if (possuiFiltros) {
-          <button type="button" class="clear-button" (click)="limparFiltros()">Limpar filtros</button>
+          <button type="button" class="clear-button" (click)="limparFiltros()">
+            Limpar filtros
+          </button>
         }
       </div>
       <div class="search-grid">
@@ -24,18 +36,32 @@
           ID da inscrição
           <div class="search-input">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="m21 21-4.4-4.4m2.4-5.1a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path
+                d="m21 21-4.4-4.4m2.4-5.1a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
             </svg>
-            <input type="search" inputmode="numeric" [(ngModel)]="filtroId" placeholder="Ex.: 12">
+            <input type="search" inputmode="numeric" [(ngModel)]="filtroId" placeholder="Ex.: 12" />
           </div>
         </label>
         <label>
           Estudante
           <div class="search-input">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path
+                d="M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
             </svg>
-            <input type="search" [(ngModel)]="filtroEstudante" placeholder="Nome ou ID do estudante">
+            <input
+              type="search"
+              [(ngModel)]="filtroEstudante"
+              placeholder="Nome ou ID do estudante"
+            />
           </div>
         </label>
       </div>
@@ -54,16 +80,33 @@
     } @else {
       <div class="table-container">
         <table>
-          <thead><tr><th>ID</th><th>Estudante</th><th>Curso</th><th>Status</th><th>Matrícula</th><th>Ações</th></tr></thead>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Estudante</th>
+              <th>Curso</th>
+              <th>Status</th>
+              <th>Matrícula</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
           <tbody>
             @for (inscricao of inscricoesFiltradas; track inscricao.id) {
               <tr>
-                <td><span class="id-badge">#{{ inscricao.id }}</span></td>
-                <td>{{ estudantes.get(inscricao.estudanteId) || ('#' + inscricao.estudanteId) }}</td>
-                <td>{{ cursos.get(inscricao.cursoId) || ('#' + inscricao.cursoId) }}</td>
-                <td><span class="status" [class.cancelado]="inscricao.status === Status.CANCELADO">{{ inscricao.status === Status.ATIVO ? 'Ativa' : 'Cancelada' }}</span></td>
-                <td>{{ inscricao.dataMatricula | date:'dd/MM/yyyy' }}</td>
-                <td class="actions"><a [routerLink]="['/inscricoes', inscricao.id]">Ver detalhes</a></td>
+                <td>
+                  <span class="id-badge">#{{ inscricao.id }}</span>
+                </td>
+                <td>{{ estudantes.get(inscricao.estudanteId) || '#' + inscricao.estudanteId }}</td>
+                <td>{{ cursos.get(inscricao.cursoId) || '#' + inscricao.cursoId }}</td>
+                <td>
+                  <span class="status" [class.cancelado]="inscricao.status === Status.CANCELADO">{{
+                    inscricao.status === Status.ATIVO ? 'Ativa' : 'Cancelada'
+                  }}</span>
+                </td>
+                <td>{{ inscricao.dataMatricula | date: 'dd/MM/yyyy' }}</td>
+                <td class="actions">
+                  <a [routerLink]="['/inscricoes', inscricao.id]">Ver detalhes</a>
+                </td>
               </tr>
             }
           </tbody>

@@ -12,7 +12,7 @@ import { InscricaoService } from '../../services/inscricao.service';
   selector: 'app-inscricao-details',
   imports: [DatePipe, RouterLink],
   templateUrl: './inscricao-details.html',
-  styleUrl: './inscricao-details.css'
+  styleUrl: './inscricao-details.css',
 })
 export class InscricaoDetails implements OnInit {
   private readonly service = inject(InscricaoService);
@@ -34,21 +34,25 @@ export class InscricaoDetails implements OnInit {
     forkJoin({
       inscricao: this.service.buscarPorId(id),
       cursos: this.cursoService.listar(),
-      estudantes: this.estudanteService.listar()
+      estudantes: this.estudanteService.listar(),
     }).subscribe({
-      next: dados => {
+      next: (dados) => {
         this.inscricao = dados.inscricao;
-        this.curso = dados.cursos.find(curso => curso.id === dados.inscricao.cursoId)?.titulo ?? `Curso #${dados.inscricao.cursoId}`;
-        this.estudante = dados.estudantes.find(estudante => estudante.id === dados.inscricao.estudanteId)?.nomeCompleto ?? `Estudante #${dados.inscricao.estudanteId}`;
+        this.curso =
+          dados.cursos.find((curso) => curso.id === dados.inscricao.cursoId)?.titulo ??
+          `Curso #${dados.inscricao.cursoId}`;
+        this.estudante =
+          dados.estudantes.find((estudante) => estudante.id === dados.inscricao.estudanteId)
+            ?.nomeCompleto ?? `Estudante #${dados.inscricao.estudanteId}`;
         this.carregando = false;
         this.cdr.markForCheck();
       },
-      error: erro => {
+      error: (erro) => {
         console.error(erro);
         this.mensagemErro = 'Não foi possível carregar a inscrição.';
         this.carregando = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -56,11 +60,11 @@ export class InscricaoDetails implements OnInit {
     if (!this.inscricao || !window.confirm('Deseja excluir esta inscrição?')) return;
     this.service.deletar(this.inscricao.id).subscribe({
       next: () => this.router.navigate(['/inscricoes']),
-      error: erro => {
+      error: (erro) => {
         console.error(erro);
         this.mensagemErro = 'Não foi possível excluir a inscrição.';
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 }

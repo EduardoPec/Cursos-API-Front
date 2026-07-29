@@ -1,6 +1,10 @@
 <section class="page">
-  @if (mensagemErro) { <div class="alert-error">{{ mensagemErro }}</div> }
-  @if (carregando) { <p>Carregando estudante...</p> }
+  @if (mensagemErro) {
+    <div class="alert-error">{{ mensagemErro }}</div>
+  }
+  @if (carregando) {
+    <p>Carregando estudante...</p>
+  }
   @if (estudante) {
     <header class="page-header">
       <div>
@@ -13,16 +17,32 @@
     <article class="details-card">
       <div class="details-hero">
         <div class="student-avatar">{{ estudante.nomeCompleto.charAt(0).toUpperCase() }}</div>
-        <div><span>ESTUDANTE</span><h3>{{ estudante.nomeCompleto }}</h3><p>{{ estudante.email }}</p></div>
+        <div>
+          <span>ESTUDANTE</span>
+          <h3>{{ estudante.nomeCompleto }}</h3>
+          <p>{{ estudante.email }}</p>
+        </div>
       </div>
       <dl class="stats">
-        <div><dt>Data de cadastro</dt><dd>{{ estudante.dataCadastro | date:'dd/MM/yyyy' }}</dd><small>Membro desde</small></div>
-        <div><dt>Inscrições</dt><dd>{{ estudante.inscricoes?.length || 0 }}</dd><small>Cursos vinculados</small></div>
+        <div>
+          <dt>Data de cadastro</dt>
+          <dd>{{ estudante.dataCadastro | date: 'dd/MM/yyyy' }}</dd>
+          <small>Membro desde</small>
+        </div>
+        <div>
+          <dt>Inscrições</dt>
+          <dd>{{ estudante.inscricoes?.length || 0 }}</dd>
+          <small>Cursos vinculados</small>
+        </div>
       </dl>
       <footer class="details-actions">
-        <div><strong>Ações do estudante</strong><small>Atualize os dados ou exclua este perfil.</small></div>
+        <div>
+          <strong>Ações do estudante</strong><small>Atualize os dados ou exclua este perfil.</small>
+        </div>
         <div class="action-buttons">
-          <a class="button-primary" [routerLink]="['/estudantes', estudante.id, 'editar']">Editar estudante</a>
+          <a class="button-primary" [routerLink]="['/estudantes', estudante.id, 'editar']"
+            >Editar estudante</a
+          >
           <button class="button-danger" type="button" (click)="excluir()">Excluir estudante</button>
         </div>
       </footer>

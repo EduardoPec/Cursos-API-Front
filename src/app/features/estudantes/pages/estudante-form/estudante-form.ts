@@ -18,7 +18,7 @@ export class EstudanteForm implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
   readonly form = this.fb.nonNullable.group({
     nomeCompleto: ['', [Validators.required, Validators.maxLength(150)]],
-    email: ['', [Validators.required, Validators.email, Validators.maxLength(200)]]
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(200)]],
   });
   id: number | null = null;
   carregando = false;
@@ -31,13 +31,24 @@ export class EstudanteForm implements OnInit {
     this.id = id;
     this.carregando = true;
     this.service.buscarPorId(id).subscribe({
-      next: estudante => { this.form.patchValue(estudante); this.carregando = false; this.cdr.markForCheck(); },
-      error: () => { this.mensagemErro = 'Não foi possível carregar o estudante.'; this.carregando = false; this.cdr.markForCheck(); }
+      next: (estudante) => {
+        this.form.patchValue(estudante);
+        this.carregando = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.mensagemErro = 'Não foi possível carregar o estudante.';
+        this.carregando = false;
+        this.cdr.markForCheck();
+      },
     });
   }
 
   salvar(): void {
-    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     this.salvando = true;
     this.mensagemErro = '';
     const requisicao: Observable<unknown> = this.id
@@ -45,7 +56,11 @@ export class EstudanteForm implements OnInit {
       : this.service.criar(this.form.getRawValue());
     requisicao.subscribe({
       next: () => this.router.navigate(['/estudantes']),
-      error: () => { this.mensagemErro = 'Não foi possível salvar o estudante.'; this.salvando = false; this.cdr.markForCheck(); }
+      error: () => {
+        this.mensagemErro = 'Não foi possível salvar o estudante.';
+        this.salvando = false;
+        this.cdr.markForCheck();
+      },
     });
   }
 }

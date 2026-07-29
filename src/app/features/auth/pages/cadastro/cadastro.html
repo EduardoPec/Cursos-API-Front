@@ -1,16 +1,38 @@
 <section class="auth-page">
   <form class="auth-card" [formGroup]="form" (ngSubmit)="cadastrar()">
-    <div><h2>Criar conta</h2><p>Cadastre-se como estudante no CourseHub.</p></div>
-    @if (mensagemErro) { <div class="alert-error">{{ mensagemErro }}</div> }
-    <label>Usuário<input type="text" formControlName="username" autocomplete="username"></label>
-    @if (form.controls.username.touched && form.controls.username.invalid) { <small>Informe ao menos 3 caracteres.</small> }
-    <label>E-mail<input type="email" formControlName="email" autocomplete="email"></label>
-    @if (form.controls.email.touched && form.controls.email.invalid) { <small>Informe um e-mail válido.</small> }
-    <label>Senha<input type="password" formControlName="password" autocomplete="new-password"></label>
-    @if (form.controls.password.touched && form.controls.password.invalid) { <small>A senha deve possuir ao menos 6 caracteres.</small> }
-    <label>Confirmar senha<input type="password" formControlName="rePassword" autocomplete="new-password"></label>
-    @if (form.hasError('senhasDiferentes') && form.controls.rePassword.touched) { <small>As senhas não coincidem.</small> }
-    <button class="button-primary" type="submit" [disabled]="carregando">{{ carregando ? 'Cadastrando...' : 'Criar conta' }}</button>
+    <div>
+      <h2>Criar conta</h2>
+      <p>Cadastre-se como estudante no CourseHub.</p>
+    </div>
+    @if (mensagemErro) {
+      <div class="alert-error">{{ mensagemErro }}</div>
+    }
+    <label>Usuário<input type="text" formControlName="username" autocomplete="username" /></label>
+    @if (form.controls.username.touched && form.controls.username.invalid) {
+      <small>Informe ao menos 3 caracteres.</small>
+    }
+    <label>E-mail<input type="email" formControlName="email" autocomplete="email" /></label>
+    @if (form.controls.email.touched && form.controls.email.invalid) {
+      <small>Informe um e-mail válido.</small>
+    }
+    <label
+      >Senha<input type="password" formControlName="password" autocomplete="new-password"
+    /></label>
+    @if (form.controls.password.touched && form.controls.password.invalid) {
+      <small>A senha deve possuir ao menos 6 caracteres.</small>
+    }
+    <label
+      >Confirmar senha<input
+        type="password"
+        formControlName="rePassword"
+        autocomplete="new-password"
+    /></label>
+    @if (form.hasError('senhasDiferentes') && form.controls.rePassword.touched) {
+      <small>As senhas não coincidem.</small>
+    }
+    <button class="button-primary" type="submit" [disabled]="carregando">
+      {{ carregando ? 'Cadastrando...' : 'Criar conta' }}
+    </button>
     <p class="auth-link">Já possui uma conta? <a routerLink="/login">Entrar</a></p>
   </form>
 </section>

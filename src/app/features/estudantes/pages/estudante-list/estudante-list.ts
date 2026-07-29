@@ -20,11 +20,15 @@ export class EstudanteList implements OnInit {
   mensagemErro = '';
   filtroId = '';
 
-  ngOnInit(): void { this.carregar(); }
+  ngOnInit(): void {
+    this.carregar();
+  }
 
   get estudantesFiltrados(): ReadEstudanteDto[] {
     const id = this.filtroId.trim();
-    return id ? this.estudantes.filter(estudante => String(estudante.id) === id) : this.estudantes;
+    return id
+      ? this.estudantes.filter((estudante) => String(estudante.id) === id)
+      : this.estudantes;
   }
 
   limparFiltro(): void {
@@ -33,12 +37,23 @@ export class EstudanteList implements OnInit {
 
   carregar(): void {
     this.carregando = true;
-    this.service.listar().pipe(
-      timeout(10000),
-      finalize(() => { this.carregando = false; this.cdr.markForCheck(); })
-    ).subscribe({
-      next: estudantes => { this.estudantes = estudantes; this.cdr.markForCheck(); },
-      error: () => { this.mensagemErro = 'Não foi possível carregar os estudantes.'; }
-    });
+    this.service
+      .listar()
+      .pipe(
+        timeout(10000),
+        finalize(() => {
+          this.carregando = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (estudantes) => {
+          this.estudantes = estudantes;
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.mensagemErro = 'Não foi possível carregar os estudantes.';
+        },
+      });
   }
 }

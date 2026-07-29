@@ -13,17 +13,60 @@
   border-radius: 18px;
   background: white;
   box-shadow: 0 8px 25px rgba(15, 23, 42, 0.05);
-  transition: transform .2s ease, box-shadow .2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
-.card:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(15, 23, 42, 0.09); }
-.card span { display: block; color: #64748b; font-size: 13px; font-weight: 600; }
-.card strong { display: block; margin-top: 5px; color: #0f172a; font-size: 34px; letter-spacing: -1px; }
-.card-icon { display: grid; width: 52px; height: 52px; flex: 0 0 52px; place-items: center; border-radius: 15px; font-size: 23px; }
-.card-icon.courses { background: #e0edff; color: #2563eb; }
-.card-icon.students { background: #ede9fe; color: #7c3aed; }
-.card-icon.enrollments { background: #dcfce7; color: #16a34a; }
-.card-icon.cancelled { background: #fee2e2; color: #dc2626; }
-.eyebrow { display: block; margin-bottom: 8px; color: #3b82f6; font-size: 11px; font-weight: 800; letter-spacing: 1.4px; }
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.09);
+}
+.card span {
+  display: block;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+.card strong {
+  display: block;
+  margin-top: 5px;
+  color: #0f172a;
+  font-size: 34px;
+  letter-spacing: -1px;
+}
+.card-icon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  place-items: center;
+  border-radius: 15px;
+  font-size: 23px;
+}
+.card-icon.courses {
+  background: #e0edff;
+  color: #2563eb;
+}
+.card-icon.students {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+.card-icon.enrollments {
+  background: #dcfce7;
+  color: #16a34a;
+}
+.card-icon.cancelled {
+  background: #fee2e2;
+  color: #dc2626;
+}
+.eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: #3b82f6;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
 .welcome-card {
   display: flex;
   min-height: 190px;
@@ -34,12 +77,34 @@
   border-radius: 22px;
   background: linear-gradient(125deg, #1d4ed8 0%, #4338ca 100%);
   color: white;
-  box-shadow: 0 18px 45px rgba(37, 99, 235, .2);
+  box-shadow: 0 18px 45px rgba(37, 99, 235, 0.2);
 }
-.welcome-card span { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; opacity: .75; }
-.welcome-card h3 { margin: 10px 0 8px; font-size: clamp(24px, 3vw, 34px); letter-spacing: -.8px; }
-.welcome-card p { margin: 0; color: #dbeafe; }
-.welcome-art { display: grid; width: 115px; height: 115px; place-items: center; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; background: rgba(255,255,255,.1); font-size: 55px; box-shadow: 0 0 0 22px rgba(255,255,255,.05); }
+.welcome-card span {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  opacity: 0.75;
+}
+.welcome-card h3 {
+  margin: 10px 0 8px;
+  font-size: clamp(24px, 3vw, 34px);
+  letter-spacing: -0.8px;
+}
+.welcome-card p {
+  margin: 0;
+  color: #dbeafe;
+}
+.welcome-art {
+  display: grid;
+  width: 115px;
+  height: 115px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 55px;
+  box-shadow: 0 0 0 22px rgba(255, 255, 255, 0.05);
+}
 
 @media (max-width: 760px) {
   .cards {

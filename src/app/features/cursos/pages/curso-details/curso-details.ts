@@ -22,8 +22,16 @@ export class CursoDetails implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.service.buscarPorId(id).subscribe({
-      next: curso => { this.curso = curso; this.carregando = false; this.cdr.markForCheck(); },
-      error: () => { this.mensagemErro = 'Não foi possível carregar o curso.'; this.carregando = false; this.cdr.markForCheck(); }
+      next: (curso) => {
+        this.curso = curso;
+        this.carregando = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.mensagemErro = 'Não foi possível carregar o curso.';
+        this.carregando = false;
+        this.cdr.markForCheck();
+      },
     });
   }
 
@@ -31,7 +39,10 @@ export class CursoDetails implements OnInit {
     if (!this.curso || !window.confirm('Deseja excluir este curso?')) return;
     this.service.deletar(this.curso.id).subscribe({
       next: () => this.router.navigate(['/cursos']),
-      error: () => { this.mensagemErro = 'Não foi possível excluir o curso.'; this.cdr.markForCheck(); }
+      error: () => {
+        this.mensagemErro = 'Não foi possível excluir o curso.';
+        this.cdr.markForCheck();
+      },
     });
   }
 }

@@ -1,45 +1,45 @@
 <div class="app-layout" [class.auth-layout]="!auth.autenticado()">
   @if (auth.autenticado()) {
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-mark">C</div>
-      <div>
-        <h1>API Cursos</h1>
-        <span>Gestão acadêmica</span>
-      </div>
-    </div>
-
-    <nav class="menu">
-      <a routerLink="/dashboard" routerLinkActive="active">
-        <span class="nav-icon">⌂</span> Dashboard
-      </a>
-
-      <a routerLink="/cursos" routerLinkActive="active">
-        <span class="nav-icon">▤</span> Cursos
-      </a>
-
-      <a routerLink="/estudantes" routerLinkActive="active">
-        <span class="nav-icon">♙</span> Estudantes
-      </a>
-
-      <a routerLink="/inscricoes" routerLinkActive="active">
-        <span class="nav-icon">✓</span> Inscrições
-      </a>
-
-      @if (auth.autenticado()) {
-        <div class="user-menu">
-          <div class="avatar">{{ auth.usuario().charAt(0).toUpperCase() }}</div>
-          <div class="user-info">
-            <span>{{ auth.usuario() }}</span>
-            <small>{{ auth.roles().join(', ') }}</small>
-          </div>
-          <button type="button" (click)="sair()" title="Sair">↪</button>
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">C</div>
+        <div>
+          <h1>API Cursos</h1>
+          <span>Gestão acadêmica</span>
         </div>
-      } @else {
-        <a routerLink="/login" routerLinkActive="active">Entrar</a>
-      }
-    </nav>
-  </aside>
+      </div>
+
+      <nav class="menu">
+        <a routerLink="/dashboard" routerLinkActive="active">
+          <span class="nav-icon">⌂</span> Dashboard
+        </a>
+
+        <a routerLink="/cursos" routerLinkActive="active">
+          <span class="nav-icon">▤</span> Cursos
+        </a>
+
+        <a routerLink="/estudantes" routerLinkActive="active">
+          <span class="nav-icon">♙</span> Estudantes
+        </a>
+
+        <a routerLink="/inscricoes" routerLinkActive="active">
+          <span class="nav-icon">✓</span> Inscrições
+        </a>
+
+        @if (auth.autenticado()) {
+          <div class="user-menu">
+            <div class="avatar">{{ auth.usuario().charAt(0).toUpperCase() }}</div>
+            <div class="user-info">
+              <span>{{ auth.usuario() }}</span>
+              <small>{{ auth.roles().join(', ') }}</small>
+            </div>
+            <button type="button" (click)="sair()" title="Sair">↪</button>
+          </div>
+        } @else {
+          <a routerLink="/login" routerLinkActive="active">Entrar</a>
+        }
+      </nav>
+    </aside>
   }
 
   <main class="main-content">

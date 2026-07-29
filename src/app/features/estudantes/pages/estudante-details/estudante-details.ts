@@ -21,8 +21,16 @@ export class EstudanteDetails implements OnInit {
 
   ngOnInit(): void {
     this.service.buscarPorId(Number(this.route.snapshot.paramMap.get('id'))).subscribe({
-      next: estudante => { this.estudante = estudante; this.carregando = false; this.cdr.markForCheck(); },
-      error: () => { this.mensagemErro = 'Não foi possível carregar o estudante.'; this.carregando = false; this.cdr.markForCheck(); }
+      next: (estudante) => {
+        this.estudante = estudante;
+        this.carregando = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.mensagemErro = 'Não foi possível carregar o estudante.';
+        this.carregando = false;
+        this.cdr.markForCheck();
+      },
     });
   }
 
@@ -30,7 +38,10 @@ export class EstudanteDetails implements OnInit {
     if (!this.estudante || !window.confirm('Deseja excluir este estudante?')) return;
     this.service.deletar(this.estudante.id).subscribe({
       next: () => this.router.navigate(['/estudantes']),
-      error: () => { this.mensagemErro = 'Não foi possível excluir o estudante.'; this.cdr.markForCheck(); }
+      error: () => {
+        this.mensagemErro = 'Não foi possível excluir o estudante.';
+        this.cdr.markForCheck();
+      },
     });
   }
 }

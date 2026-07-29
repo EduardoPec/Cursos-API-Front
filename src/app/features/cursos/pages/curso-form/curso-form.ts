@@ -21,7 +21,7 @@ export class CursoForm implements OnInit {
     titulo: ['', [Validators.required, Validators.maxLength(150)]],
     descricao: ['', [Validators.required, Validators.maxLength(1000)]],
     categoria: ['', [Validators.required, Validators.maxLength(100)]],
-    cargaHoraria: [1, [Validators.required, Validators.min(1)]]
+    cargaHoraria: [1, [Validators.required, Validators.min(1)]],
   });
 
   id: number | null = null;
@@ -35,7 +35,7 @@ export class CursoForm implements OnInit {
     this.id = id;
     this.carregando = true;
     this.service.buscarPorId(id).subscribe({
-      next: curso => {
+      next: (curso) => {
         this.form.patchValue(curso);
         this.carregando = false;
         this.cdr.markForCheck();
@@ -44,7 +44,7 @@ export class CursoForm implements OnInit {
         this.mensagemErro = 'Não foi possível carregar o curso.';
         this.carregando = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -58,18 +58,24 @@ export class CursoForm implements OnInit {
     const requisicao: Observable<unknown> = this.id
       ? this.service.atualizar(this.id, this.form.getRawValue())
       : this.service.criar(this.form.getRawValue());
-    requisicao.pipe(
-      timeout(15000),
-      finalize(() => { this.salvando = false; this.cdr.markForCheck(); })
-    ).subscribe({
-      next: () => this.router.navigate(['/cursos']),
-      error: erro => {
-        console.error('Erro ao salvar curso:', erro);
-        this.mensagemErro = erro.status === 401
-          ? 'A API exige autenticação para criar cursos. Faça login ou libere este endpoint no backend.'
-          : 'Não foi possível salvar o curso.';
-        this.cdr.markForCheck();
-      }
-    });
+    requisicao
+      .pipe(
+        timeout(15000),
+        finalize(() => {
+          this.salvando = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => this.router.navigate(['/cursos']),
+        error: (erro) => {
+          console.error('Erro ao salvar curso:', erro);
+          this.mensagemErro =
+            erro.status === 401
+              ? 'A API exige autenticação para criar cursos. Faça login ou libere este endpoint no backend.'
+              : 'Não foi possível salvar o curso.';
+          this.cdr.markForCheck();
+        },
+      });
   }
 }

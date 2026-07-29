@@ -25,7 +25,7 @@ export class InscricaoForm implements OnInit {
   readonly form = this.fb.nonNullable.group({
     estudanteId: [0, [Validators.required, Validators.min(1)]],
     cursoId: [0, [Validators.required, Validators.min(1)]],
-    status: [Status.ATIVO, Validators.required]
+    status: [Status.ATIVO, Validators.required],
   });
   cursos: ReadCursoDto[] = [];
   estudantes: ReadEstudanteDto[] = [];
@@ -37,19 +37,35 @@ export class InscricaoForm implements OnInit {
   ngOnInit(): void {
     forkJoin({
       cursos: this.cursoService.listar(),
-      estudantes: this.estudanteService.listar()
+      estudantes: this.estudanteService.listar(),
     }).subscribe({
-      next: dados => { this.cursos = dados.cursos; this.estudantes = dados.estudantes; this.carregando = false; this.cdr.markForCheck(); },
-      error: () => { this.mensagemErro = 'Não foi possível carregar cursos e estudantes.'; this.carregando = false; this.cdr.markForCheck(); }
+      next: (dados) => {
+        this.cursos = dados.cursos;
+        this.estudantes = dados.estudantes;
+        this.carregando = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.mensagemErro = 'Não foi possível carregar cursos e estudantes.';
+        this.carregando = false;
+        this.cdr.markForCheck();
+      },
     });
   }
 
   salvar(): void {
-    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     this.salvando = true;
     this.service.criar(this.form.getRawValue()).subscribe({
       next: () => this.router.navigate(['/inscricoes']),
-      error: () => { this.mensagemErro = 'Não foi possível realizar a inscrição.'; this.salvando = false; this.cdr.markForCheck(); }
+      error: () => {
+        this.mensagemErro = 'Não foi possível realizar a inscrição.';
+        this.salvando = false;
+        this.cdr.markForCheck();
+      },
     });
   }
 }

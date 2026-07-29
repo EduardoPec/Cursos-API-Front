@@ -29,18 +29,22 @@ export class InscricaoList implements OnInit {
   filtroEstudante = '';
   readonly Status = Status;
 
-  ngOnInit(): void { this.carregar(); }
+  ngOnInit(): void {
+    this.carregar();
+  }
 
   get inscricoesFiltradas(): ReadInscricaoDto[] {
     const id = this.filtroId.trim();
     const estudante = this.filtroEstudante.trim().toLocaleLowerCase('pt-BR');
 
-    return this.inscricoes.filter(inscricao => {
+    return this.inscricoes.filter((inscricao) => {
       const nomeEstudante = this.estudantes.get(inscricao.estudanteId) ?? '';
-      return (!id || String(inscricao.id) === id)
-        && (!estudante
-          || String(inscricao.estudanteId).includes(estudante)
-          || nomeEstudante.toLocaleLowerCase('pt-BR').includes(estudante));
+      return (
+        (!id || String(inscricao.id) === id) &&
+        (!estudante ||
+          String(inscricao.estudanteId).includes(estudante) ||
+          nomeEstudante.toLocaleLowerCase('pt-BR').includes(estudante))
+      );
     });
   }
 
@@ -58,18 +62,27 @@ export class InscricaoList implements OnInit {
     forkJoin({
       inscricoes: this.service.listar(),
       cursos: this.cursoService.listar(),
-      estudantes: this.estudanteService.listar()
-    }).pipe(
-      timeout(10000),
-      finalize(() => { this.carregando = false; this.cdr.markForCheck(); })
-    ).subscribe({
-      next: dados => {
-        this.inscricoes = dados.inscricoes;
-        this.cursos = new Map(dados.cursos.map(curso => [curso.id, curso.titulo]));
-        this.estudantes = new Map(dados.estudantes.map(estudante => [estudante.id, estudante.nomeCompleto]));
-        this.cdr.markForCheck();
-      },
-      error: () => { this.mensagemErro = 'Não foi possível carregar as inscrições.'; }
-    });
+      estudantes: this.estudanteService.listar(),
+    })
+      .pipe(
+        timeout(10000),
+        finalize(() => {
+          this.carregando = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (dados) => {
+          this.inscricoes = dados.inscricoes;
+          this.cursos = new Map(dados.cursos.map((curso) => [curso.id, curso.titulo]));
+          this.estudantes = new Map(
+            dados.estudantes.map((estudante) => [estudante.id, estudante.nomeCompleto]),
+          );
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.mensagemErro = 'Não foi possível carregar as inscrições.';
+        },
+      });
   }
 }

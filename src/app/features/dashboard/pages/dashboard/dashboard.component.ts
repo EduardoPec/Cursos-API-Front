@@ -8,11 +8,10 @@ import { Status } from '../../../../shared/enums/Status.enum';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
-
-  constructor() { }
+  constructor() {}
 
   private readonly cursoService = inject(CursoService);
   private readonly estudanteService = inject(EstudanteService);
@@ -31,30 +30,31 @@ export class DashboardComponent implements OnInit {
     this.carregarDashboard();
   }
 
-  carregarDashboard()  {
+  carregarDashboard() {
     this.carregando = true;
     this.mensagemErro = '';
 
-    forkJoin ({
+    forkJoin({
       cursos: this.cursoService.listar(),
       estudantes: this.estudanteService.listar(),
-      inscricoes: this.inscricaoService.listar()
+      inscricoes: this.inscricaoService.listar(),
     }).subscribe({
-      next: resultado => {
+      next: (resultado) => {
         this.totalCursos = resultado.cursos.length;
         this.totalEstudantes = resultado.estudantes.length;
         this.totalInscricoes = resultado.inscricoes.length;
-        this.totalInscricoesCanceladas = resultado.inscricoes.filter(inscricao => inscricao.status === Status.CANCELADO).length;
+        this.totalInscricoesCanceladas = resultado.inscricoes.filter(
+          (inscricao) => inscricao.status === Status.CANCELADO,
+        ).length;
         this.carregando = false;
         this.cdr.markForCheck();
       },
-      error: erro => {
+      error: (erro) => {
         console.log(erro);
         this.mensagemErro = 'Não foi possivel carregar o dashboard!';
         this.carregando = false;
         this.cdr.markForCheck();
-      }
-    })
+      },
+    });
   }
-
 }

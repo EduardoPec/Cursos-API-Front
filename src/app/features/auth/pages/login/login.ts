@@ -8,7 +8,7 @@ import { AuthService } from '../../../../core/auth/auth.service';
   selector: 'app-login',
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrl: './login.css',
 })
 export class Login {
   private readonly fb = inject(FormBuilder);
@@ -19,7 +19,7 @@ export class Login {
 
   readonly form = this.fb.nonNullable.group({
     username: ['', Validators.required],
-    password: ['', Validators.required]
+    password: ['', Validators.required],
   });
   carregando = false;
   mensagemErro = '';
@@ -34,18 +34,27 @@ export class Login {
     this.carregando = true;
     this.mensagemErro = '';
     const { username, password } = this.form.getRawValue();
-    this.auth.login(username, password).pipe(
-      finalize(() => { this.carregando = false; this.cdr.markForCheck(); })
-    ).subscribe({
-      next: () => {
-        const destino = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
-        this.router.navigateByUrl(destino);
-      },
-      error: erro => {
-        console.error('Erro no login:', erro);
-        this.mensagemErro = erro.status === 401 ? 'Usuário ou senha inválidos.' : 'Não foi possível entrar. Verifique se a API está disponível.';
-        this.cdr.markForCheck();
-      }
-    });
+    this.auth
+      .login(username, password)
+      .pipe(
+        finalize(() => {
+          this.carregando = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          const destino = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
+          this.router.navigateByUrl(destino);
+        },
+        error: (erro) => {
+          console.error('Erro no login:', erro);
+          this.mensagemErro =
+            erro.status === 401
+              ? 'Usuário ou senha inválidos.'
+              : 'Não foi possível entrar. Verifique se a API está disponível.';
+          this.cdr.markForCheck();
+        },
+      });
   }
 }
