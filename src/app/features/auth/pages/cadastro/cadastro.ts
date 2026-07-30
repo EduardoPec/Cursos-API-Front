@@ -29,6 +29,7 @@ export class Cadastro {
   private readonly cdr = inject(ChangeDetectorRef);
   readonly form = this.fb.nonNullable.group(
     {
+      nomeCompleto: ['', Validators.required],
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -47,7 +48,7 @@ export class Cadastro {
     this.carregando = true;
     this.mensagemErro = '';
     this.auth
-      .cadastrar({ ...this.form.getRawValue(), role: 'ESTUDANTE' })
+      .cadastrar(this.form.getRawValue())
       .pipe(
         finalize(() => {
           this.carregando = false;
