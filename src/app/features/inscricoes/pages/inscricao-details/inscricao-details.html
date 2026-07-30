@@ -48,9 +48,43 @@
 
       <footer class="details-actions">
         <div>
-          <strong>Ações da inscrição</strong><small>Exclua este vínculo permanentemente.</small>
-        </div>
-        <button class="button-danger" type="button" (click)="excluir()">Excluir inscrição</button>
+    <strong>Ações da inscrição</strong>
+
+    <small>
+      Altere o status ou exclua este vínculo permanentemente.
+    </small>
+  </div>
+
+  <div class="action-buttons">
+    @if (inscricao.status === Status.ATIVO) {
+      <button
+        class="button-warning"
+        type="button"
+        [disabled]="atualizandoStatus"
+        (click)="atualizarStatus(Status.CANCELADO)"
+      >
+        {{ atualizandoStatus ? 'Cancelando...' : 'Desativar inscrição' }}
+      </button>
+    } @else {
+      <button
+        class="button-primary"
+        type="button"
+        [disabled]="atualizandoStatus"
+        (click)="atualizarStatus(Status.ATIVO)"
+      >
+        {{ atualizandoStatus ? 'Reativando...' : 'Reativar inscrição' }}
+      </button>
+    }
+
+    <button
+      class="button-danger"
+      type="button"
+      [disabled]="atualizandoStatus"
+      (click)="excluir()"
+    >
+      Excluir inscrição
+    </button>
+  </div>
       </footer>
     </article>
   }

@@ -28,6 +28,7 @@ export class InscricaoDetails implements OnInit {
   carregando = true;
   mensagemErro = '';
   readonly Status = Status;
+  atualizandoStatus = false;
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -51,6 +52,41 @@ export class InscricaoDetails implements OnInit {
         console.error(erro);
         this.mensagemErro = 'Não foi possível carregar a inscrição.';
         this.carregando = false;
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  atualizarStatus(status: Status): void {
+  if (!this.inscricao || this.inscricao.status === status) {
+    return;
+  }
+
+  const mensagem =
+    status === Status.CANCELADO
+      ? 'Deseja realmente cancelar esta inscrição?'
+      : 'Deseja realmente reativar esta inscrição?';
+
+  if (!window.confirm(mensagem)) {
+    return;
+  }
+
+  this.atualizandoStatus = true;
+  this.mensagemErro = '';
+
+  this.service
+    .atualizarStatus(this.inscricao.id, status)
+    .subscribe({
+      next: (inscricaoAtualizada) => {
+        this.inscricao = inscricaoAtualizada;
+        this.atualizandoStatus = false;
+        this.cdr.markForCheck();
+      },
+      error: (erro) => {
+        console.error('Erro ao atualizar status:', erro);
+        this.mensagemErro =
+          'Não foi possível atualizar o status da inscrição.';
+        this.atualizandoStatus = false;
         this.cdr.markForCheck();
       },
     });
