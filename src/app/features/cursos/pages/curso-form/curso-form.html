@@ -19,6 +19,15 @@
           <label>Categoria<input type="text" formControlName="categoria" placeholder="Ex.: Tecnologia"></label>
           <label>Carga horária<input type="number" min="1" formControlName="cargaHoraria" placeholder="Em horas"></label>
         </div>
+        <label>Professor
+          <select formControlName="professorId">
+            <option [ngValue]="null">Sem professor</option>
+            @for (professor of professores; track professor.id) {
+              <option [ngValue]="professor.id">{{ professor.nomeCompleto }}</option>
+            }
+          </select>
+        </label>
+        <p class="field-hint">A associação é opcional e pode ser alterada posteriormente.</p>
       </div>
       <div class="form-actions">
         <a routerLink="/cursos" class="button-secondary">Cancelar</a>

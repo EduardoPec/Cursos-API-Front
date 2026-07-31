@@ -3,4 +3,5 @@ export interface CreateCursoDto {
     descricao: string;
     categoria: string;
     cargaHoraria: number;
+    professorId: number | null;
 }

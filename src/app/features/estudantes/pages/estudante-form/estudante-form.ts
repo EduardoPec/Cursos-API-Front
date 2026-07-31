@@ -2,7 +2,9 @@ import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EstudanteService } from '../../services/estudante.service';
-import { Observable } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { finalize } from 'rxjs';
+import { UpdateEstudanteDto } from '../../../../shared/dtos/estudante/UpdateEstudanteDto';
 
 @Component({
   selector: 'app-estudante-form',
@@ -27,7 +29,10 @@ export class EstudanteForm implements OnInit {
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (!id) return;
+    if (!id) {
+      this.router.navigate(['/estudantes']);
+      return;
+    }
     this.id = id;
     this.carregando = true;
     this.service.buscarPorId(id).subscribe({
@@ -49,18 +54,29 @@ export class EstudanteForm implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
+    if (!this.id) return;
     this.salvando = true;
     this.mensagemErro = '';
-    const requisicao: Observable<unknown> = this.id
-      ? this.service.atualizar(this.id, this.form.getRawValue())
-      : this.service.criar(this.form.getRawValue());
-    requisicao.subscribe({
-      next: () => this.router.navigate(['/estudantes']),
-      error: () => {
-        this.mensagemErro = 'Não foi possível salvar o estudante.';
+    const valor = this.form.getRawValue();
+    const dto: UpdateEstudanteDto = {
+      nomeCompleto: valor.nomeCompleto.trim(),
+      email: valor.email.trim(),
+    };
+    this.service
+      .atualizar(this.id, dto)
+      .pipe(finalize(() => {
         this.salvando = false;
         this.cdr.markForCheck();
-      },
-    });
+      }))
+      .subscribe({
+        next: () => this.router.navigate(['/estudantes', this.id]),
+        error: (erro: HttpErrorResponse) => {
+          this.mensagemErro = erro.status === 409
+            ? 'Este e-mail já está sendo utilizado.'
+            : erro.status === 400
+              ? 'A API rejeitou os dados informados. Revise o nome e o e-mail.'
+              : 'Não foi possível atualizar o estudante.';
+        },
+      });
   }
 }

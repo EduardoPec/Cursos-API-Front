@@ -6,6 +6,7 @@ export interface ReadCursoDto {
     descricao: string;
     categoria: string;
     cargaHoraria: number;
+    professorId?: number | null;
     dataCriacao: string;
     inscricoes: ReadInscricaoDto[]
 }

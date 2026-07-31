@@ -17,7 +17,13 @@
     </div>
   }
 
-  @if (!carregando) {
+  @if (!auth.possuiRole('ADMIN')) {
+    <article class="welcome-card">
+      <div><span>ACESSO AUTENTICADO</span><h3>Bem-vindo ao CourseHub.</h3><p>Sua área específica será disponibilizada futuramente.</p></div>
+    </article>
+  }
+
+  @if (!carregando && auth.possuiRole('ADMIN')) {
     <div class="cards">
       <article class="card">
         <div class="card-icon courses">▤</div>

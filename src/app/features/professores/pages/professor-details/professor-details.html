@@ -1,0 +1,17 @@
+<section class="page">
+  @if (mensagemErro) { <div class="alert-error">{{ mensagemErro }}</div> }
+  @if (carregando) { <p>Carregando professor...</p> }
+  @if (professor) {
+    <header class="page-header"><div><span class="eyebrow">PERFIL DO PROFESSOR</span><h2>{{ professor.nomeCompleto }}</h2><p>Consulte os dados deste professor.</p></div><a class="button-secondary" routerLink="/professores">← Voltar para professores</a></header>
+    <article class="details-card">
+      <div class="details-hero"><div class="student-avatar">{{ professor.nomeCompleto.charAt(0).toUpperCase() }}</div><div><span>PROFESSOR</span><h3>{{ professor.nomeCompleto }}</h3><p>{{ professor.email }}</p></div></div>
+      <dl class="stats">
+        <div><dt>Usuário</dt><dd>{{ professor.username }}</dd><small>ID {{ professor.usuarioId }}</small></div>
+        <div><dt>Especialidade</dt><dd>{{ professor.especialidade || 'Não informada' }}</dd><small>Área de atuação</small></div>
+        <div><dt>Data de cadastro</dt><dd>{{ professor.dataCadastro | date: 'dd/MM/yyyy' }}</dd><small>Membro desde</small></div>
+      </dl>
+      @if (professor.biografia) { <div class="stats"><div><dt>Biografia</dt><dd>{{ professor.biografia }}</dd></div></div> }
+      <footer class="details-actions"><div><strong>Ações do professor</strong><small>Atualize os dados ou exclua este perfil.</small></div><div class="action-buttons"><a class="button-primary" [routerLink]="['/professores', professor.id, 'editar']">Editar professor</a><button class="button-danger" type="button" [disabled]="excluindo" (click)="excluir()">{{ excluindo ? 'Excluindo...' : 'Excluir professor' }}</button></div></footer>
+    </article>
+  }
+</section>

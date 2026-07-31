@@ -29,6 +29,11 @@
       </div>
       <dl class="stats">
         <div>
+          <dt>Professor responsável</dt>
+          <dd>{{ professorResponsavel }}</dd>
+          <small>{{ possuiProfessorResponsavel ? 'Professor responsável pelo curso' : 'Você pode definir um professor ao editar o curso' }}</small>
+        </div>
+        <div>
           <dt>Carga horária</dt>
           <dd>{{ curso.cargaHoraria }}h</dd>
           <small>Duração total</small>

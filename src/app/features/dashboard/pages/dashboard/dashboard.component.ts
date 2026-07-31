@@ -4,6 +4,7 @@ import { EstudanteService } from '../../../estudantes/services/estudante.service
 import { InscricaoService } from '../../../inscricoes/services/inscricao.service';
 import { forkJoin } from 'rxjs';
 import { Status } from '../../../../shared/enums/Status.enum';
+import { AuthService } from '../../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +18,7 @@ export class DashboardComponent implements OnInit {
   private readonly estudanteService = inject(EstudanteService);
   private readonly inscricaoService = inject(InscricaoService);
   private readonly cdr = inject(ChangeDetectorRef);
+  readonly auth = inject(AuthService);
 
   totalCursos = 0;
   totalEstudantes = 0;
@@ -27,7 +29,9 @@ export class DashboardComponent implements OnInit {
   mensagemErro = '';
 
   ngOnInit() {
-    this.carregarDashboard();
+    if (this.auth.possuiRole('ADMIN')) {
+      this.carregarDashboard();
+    }
   }
 
   carregarDashboard() {

@@ -3,7 +3,6 @@ import { ReadEstudanteDto } from '../../../shared/dtos/estudante/ReadEstudanteDt
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { API_CONFIG } from '../../../core/config/api.config';
-import { CreateEstudanteDto } from '../../../shared/dtos/estudante/CreateEstudanteDto';
 import { UpdateEstudanteDto } from '../../../shared/dtos/estudante/UpdateEstudanteDto';
 
 @Injectable({
@@ -14,7 +13,7 @@ export class EstudanteService {
 constructor() { }
 
   private readonly http = inject(HttpClient)
-  private readonly url = `${API_CONFIG.baseUrl}/estudante`
+  private readonly url = `${API_CONFIG.baseUrl}/Estudante`
 
   listar(): Observable<ReadEstudanteDto[]> {
     return this.http.get<ReadEstudanteDto[]>(this.url, {
@@ -24,10 +23,6 @@ constructor() { }
 
   buscarPorId(id: number): Observable<ReadEstudanteDto> {
     return this.http.get<ReadEstudanteDto>(`${this.url}/${id}`);
-  }
-
-  criar(dto: CreateEstudanteDto): Observable<ReadEstudanteDto> {
-    return this.http.post<ReadEstudanteDto>(this.url, dto);
   }
 
   atualizar(id: number, dto: UpdateEstudanteDto): Observable<void> {

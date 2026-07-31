@@ -7,7 +7,6 @@ import { CursoService } from '../../../cursos/services/curso.service';
 import { EstudanteService } from '../../../estudantes/services/estudante.service';
 import { ReadCursoDto } from '../../../../shared/dtos/curso/ReadCursoDto';
 import { ReadEstudanteDto } from '../../../../shared/dtos/estudante/ReadEstudanteDto';
-import { Status } from '../../../../shared/enums/Status.enum';
 
 @Component({
   selector: 'app-inscricao-form',
@@ -25,14 +24,12 @@ export class InscricaoForm implements OnInit {
   readonly form = this.fb.nonNullable.group({
     estudanteId: [0, [Validators.required, Validators.min(1)]],
     cursoId: [0, [Validators.required, Validators.min(1)]],
-    status: [Status.ATIVO, Validators.required],
   });
   cursos: ReadCursoDto[] = [];
   estudantes: ReadEstudanteDto[] = [];
   carregando = true;
   salvando = false;
   mensagemErro = '';
-  readonly Status = Status;
 
   ngOnInit(): void {
     forkJoin({

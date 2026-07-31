@@ -3,6 +3,7 @@ import { computed, inject, Injectable, PLATFORM_ID, signal } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 import { API_CONFIG } from '../config/api.config';
+import { LoginResponse } from '../../shared/dtos/auth/LoginResponse';
 
 interface JwtPayload {
   exp?: number;
@@ -10,15 +11,6 @@ interface JwtPayload {
   'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'?: string | string[];
   'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'?: string;
   unique_name?: string;
-}
-
-interface LoginResponse {
-  accessToken: string;
-  expiration: string;
-  usuarioId: string;
-  username: string;
-  email: string;
-  roles: string[];
 }
 
 export interface CadastroUsuario {
@@ -34,7 +26,7 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly storageKey = 'coursehub_token';
-  private readonly tokenState = signal<string | null>(this.lerToken());
+  private readonly tokenState = signal<string | null>(this.lerTokenValido());
 
   readonly token = this.tokenState.asReadonly();
 
@@ -104,7 +96,7 @@ export class AuthService {
 
   possuiRole(...roles: string[]): boolean {
     return roles.some(role =>
-      this.roles().includes(role)
+      this.roles().includes(role.toUpperCase())
     );
   }
 
@@ -116,12 +108,20 @@ export class AuthService {
     }
   }
 
-  private lerToken(): string | null {
+  private lerTokenValido(): string | null {
     if (!isPlatformBrowser(this.platformId)) {
       return null;
     }
 
-    return localStorage.getItem(this.storageKey);
+    const token = localStorage.getItem(this.storageKey);
+    const payload = this.decodificar(token);
+
+    if (!token || !payload || (payload.exp !== undefined && payload.exp * 1000 <= Date.now())) {
+      localStorage.removeItem(this.storageKey);
+      return null;
+    }
+
+    return token;
   }
 
   private decodificar(token: string | null): JwtPayload | null {

@@ -1,0 +1,50 @@
+<section class="page">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">GESTÃO ACADÊMICA</span>
+      <h2>Professores</h2>
+      <p>Gerencie os professores cadastrados.</p>
+    </div>
+    <a routerLink="/professores/novo" class="button-primary">Novo professor</a>
+  </header>
+
+  @if (carregando) { <p>Carregando professores...</p> }
+  @if (mensagemErro) { <div class="alert-error">{{ mensagemErro }}</div> }
+  @if (!carregando && professores.length === 0) {
+    <div class="empty-state">Nenhum professor cadastrado.</div>
+  }
+  @if (professores.length > 0) {
+    <div class="id-search-panel">
+      <label for="professor-id">Buscar por ID</label>
+      <div class="id-search-row">
+        <div class="id-search-input">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m21 21-4.4-4.4m2.4-5.1a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+          <input id="professor-id" type="search" inputmode="numeric" [(ngModel)]="filtroId" placeholder="Digite o ID do professor" />
+        </div>
+        @if (filtroId) { <button type="button" (click)="limparFiltro()">Limpar</button> }
+      </div>
+    </div>
+    @if (professoresFiltrados.length === 0) {
+      <div class="empty-state filter-empty"><strong>Nenhum professor encontrado</strong><span>Verifique o ID informado.</span><button type="button" (click)="limparFiltro()">Limpar filtro</button></div>
+    } @else {
+    <div class="table-container">
+      <table>
+        <thead><tr><th>ID</th><th>Nome</th><th>Usuário</th><th>E-mail</th><th>Especialidade</th><th>Cadastro</th><th>Ações</th></tr></thead>
+        <tbody>
+          @for (professor of professoresFiltrados; track professor.id) {
+            <tr>
+              <td><span class="table-id">#{{ professor.id }}</span></td>
+              <td>{{ professor.nomeCompleto }}</td>
+              <td>{{ professor.username }}</td>
+              <td>{{ professor.email }}</td>
+              <td>{{ professor.especialidade || 'Não informada' }}</td>
+              <td>{{ professor.dataCadastro | date: 'dd/MM/yyyy' }}</td>
+              <td class="actions"><a [routerLink]="['/professores', professor.id]">Ver detalhes</a></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    }
+  }
+</section>
