@@ -5,7 +5,9 @@
       <h2>Inscrições</h2>
       <p>Acompanhe as matrículas realizadas.</p>
     </div>
-    <a routerLink="/inscricoes/nova" class="button-primary">Nova inscrição</a>
+    @if (auth.possuiRole('ADMIN')) {
+      <a routerLink="/inscricoes/nova" class="button-primary">Nova inscrição</a>
+    }
   </header>
 
   @if (carregando) {
@@ -23,7 +25,7 @@
       <div class="search-heading">
         <div>
           <strong>Buscar inscrições</strong>
-          <span>Filtre os registros por ID ou estudante.</span>
+          <span>Filtre os registros pelo nome do estudante.</span>
         </div>
         @if (possuiFiltros) {
           <button type="button" class="clear-button" (click)="limparFiltros()">
@@ -32,20 +34,6 @@
         }
       </div>
       <div class="search-grid">
-        <label>
-          ID da inscrição
-          <div class="search-input">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path
-                d="m21 21-4.4-4.4m2.4-5.1a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-              />
-            </svg>
-            <input type="search" inputmode="numeric" [(ngModel)]="filtroId" placeholder="Ex.: 12" />
-          </div>
-        </label>
         <label>
           Estudante
           <div class="search-input">
@@ -60,7 +48,7 @@
             <input
               type="search"
               [(ngModel)]="filtroEstudante"
-              placeholder="Nome ou ID do estudante"
+              placeholder="Nome do estudante"
             />
           </div>
         </label>
@@ -82,7 +70,6 @@
         <table>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Estudante</th>
               <th>Curso</th>
               <th>Status</th>
@@ -93,11 +80,8 @@
           <tbody>
             @for (inscricao of inscricoesFiltradas; track inscricao.id) {
               <tr>
-                <td>
-                  <span class="id-badge">#{{ inscricao.id }}</span>
-                </td>
-                <td>{{ estudantes.get(inscricao.estudanteId) || '#' + inscricao.estudanteId }}</td>
-                <td>{{ cursos.get(inscricao.cursoId) || '#' + inscricao.cursoId }}</td>
+                <td>{{ estudantes.get(inscricao.estudanteId) || 'Estudante não disponível' }}</td>
+                <td>{{ cursos.get(inscricao.cursoId) || 'Curso não disponível' }}</td>
                 <td>
                   <span class="status" [class.cancelado]="inscricao.status === Status.CANCELADO">{{
                     inscricao.status === Status.ATIVO ? 'Ativa' : 'Cancelada'

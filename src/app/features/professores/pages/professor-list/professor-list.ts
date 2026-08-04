@@ -2,9 +2,10 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { finalize } from 'rxjs';
+import { finalize, timeout } from 'rxjs';
 import { ReadProfessorDto } from '../../../../shared/dtos/professor/ReadProfessorDto';
 import { ProfessorService } from '../../services/professor.service';
+import { AuthService } from '../../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-professor-list',
@@ -15,29 +16,38 @@ import { ProfessorService } from '../../services/professor.service';
 export class ProfessorList implements OnInit {
   private readonly service = inject(ProfessorService);
   private readonly cdr = inject(ChangeDetectorRef);
+  readonly auth = inject(AuthService);
 
   professores: ReadProfessorDto[] = [];
   carregando = false;
   mensagemErro = '';
-  filtroId = '';
+  filtro = '';
 
   get professoresFiltrados(): ReadProfessorDto[] {
-    const id = this.filtroId.trim();
-    return id ? this.professores.filter(professor => String(professor.id) === id) : this.professores;
+    const termo = this.filtro.trim().toLocaleLowerCase('pt-BR');
+    return termo
+      ? this.professores.filter(professor =>
+          professor.nomeCompleto.toLocaleLowerCase('pt-BR').includes(termo)
+          || professor.username.toLocaleLowerCase('pt-BR').includes(termo)
+          || professor.email.toLocaleLowerCase('pt-BR').includes(termo))
+      : this.professores;
   }
 
   limparFiltro(): void {
-    this.filtroId = '';
+    this.filtro = '';
   }
 
   ngOnInit(): void {
     this.carregando = true;
     this.service
       .listar()
-      .pipe(finalize(() => {
-        this.carregando = false;
-        this.cdr.markForCheck();
-      }))
+      .pipe(
+        timeout(10000),
+        finalize(() => {
+          this.carregando = false;
+          this.cdr.markForCheck();
+        }),
+      )
       .subscribe({
         next: professores => this.professores = professores,
         error: () => this.mensagemErro = 'Não foi possível carregar os professores.',

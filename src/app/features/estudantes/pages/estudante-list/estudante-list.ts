@@ -18,21 +18,23 @@ export class EstudanteList implements OnInit {
   estudantes: ReadEstudanteDto[] = [];
   carregando = false;
   mensagemErro = '';
-  filtroId = '';
+  filtro = '';
 
   ngOnInit(): void {
     this.carregar();
   }
 
   get estudantesFiltrados(): ReadEstudanteDto[] {
-    const id = this.filtroId.trim();
-    return id
-      ? this.estudantes.filter((estudante) => String(estudante.id) === id)
+    const termo = this.filtro.trim().toLocaleLowerCase('pt-BR');
+    return termo
+      ? this.estudantes.filter((estudante) =>
+          estudante.nomeCompleto.toLocaleLowerCase('pt-BR').includes(termo)
+          || estudante.email.toLocaleLowerCase('pt-BR').includes(termo))
       : this.estudantes;
   }
 
   limparFiltro(): void {
-    this.filtroId = '';
+    this.filtro = '';
   }
 
   carregar(): void {

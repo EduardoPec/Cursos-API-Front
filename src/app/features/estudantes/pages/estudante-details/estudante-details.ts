@@ -20,9 +20,13 @@ export class EstudanteDetails implements OnInit {
   mensagemErro = '';
 
   ngOnInit(): void {
-    this.service.buscarPorId(Number(this.route.snapshot.paramMap.get('id'))).subscribe({
-      next: (estudante) => {
-        this.estudante = estudante;
+    const id = this.route.snapshot.paramMap.get('id') ?? '';
+    this.service.listar().subscribe({
+      next: (estudantes) => {
+        this.estudante = estudantes.find(estudante => String(estudante.id) === id) ?? null;
+        if (!this.estudante) {
+          this.mensagemErro = 'Estudante não encontrado.';
+        }
         this.carregando = false;
         this.cdr.markForCheck();
       },

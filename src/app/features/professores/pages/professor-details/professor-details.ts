@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ReadProfessorDto } from '../../../../shared/dtos/professor/ReadProfessorDto';
 import { ProfessorService } from '../../services/professor.service';
+import { AuthService } from '../../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-professor-details',
@@ -15,6 +16,7 @@ export class ProfessorDetails implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
+  readonly auth = inject(AuthService);
 
   professor: ReadProfessorDto | null = null;
   carregando = true;
@@ -22,10 +24,13 @@ export class ProfessorDetails implements OnInit {
   mensagemErro = '';
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.service.buscarPorId(id).subscribe({
-      next: professor => {
-        this.professor = professor;
+    const id = this.route.snapshot.paramMap.get('id') ?? '';
+    this.service.listar().subscribe({
+      next: professores => {
+        this.professor = professores.find(professor => String(professor.id) === id) ?? null;
+        if (!this.professor) {
+          this.mensagemErro = 'Professor não encontrado.';
+        }
         this.carregando = false;
         this.cdr.markForCheck();
       },

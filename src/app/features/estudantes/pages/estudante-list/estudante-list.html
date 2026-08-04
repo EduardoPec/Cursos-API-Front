@@ -17,7 +17,7 @@
   }
   @if (estudantes.length > 0) {
     <div class="id-search-panel">
-      <label for="estudante-id">Buscar por ID</label>
+      <label for="estudante-busca">Buscar estudante</label>
       <div class="id-search-row">
         <div class="id-search-input">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -29,21 +29,20 @@
             />
           </svg>
           <input
-            id="estudante-id"
+            id="estudante-busca"
             type="search"
-            inputmode="numeric"
-            [(ngModel)]="filtroId"
-            placeholder="Digite o ID do estudante"
+            [(ngModel)]="filtro"
+            placeholder="Digite o nome ou e-mail"
           />
         </div>
-        @if (filtroId) {
+        @if (filtro) {
           <button type="button" (click)="limparFiltro()">Limpar</button>
         }
       </div>
     </div>
     @if (estudantesFiltrados.length === 0) {
       <div class="empty-state filter-empty">
-        <strong>Nenhum estudante encontrado</strong><span>Verifique o ID informado.</span
+        <strong>Nenhum estudante encontrado</strong><span>Verifique o nome ou e-mail informado.</span
         ><button type="button" (click)="limparFiltro()">Limpar filtro</button>
       </div>
     } @else {
@@ -51,7 +50,6 @@
         <table>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Nome</th>
               <th>E-mail</th>
               <th>Cadastro</th>
@@ -61,9 +59,6 @@
           <tbody>
             @for (estudante of estudantesFiltrados; track estudante.id) {
               <tr>
-                <td>
-                  <span class="table-id">#{{ estudante.id }}</span>
-                </td>
                 <td>{{ estudante.nomeCompleto }}</td>
                 <td>{{ estudante.email }}</td>
                 <td>{{ estudante.dataCadastro | date: 'dd/MM/yyyy' }}</td>

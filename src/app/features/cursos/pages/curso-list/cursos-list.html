@@ -3,9 +3,11 @@
     <div>
       <span class="eyebrow">GESTÃO ACADÊMICA</span>
       <h2>Cursos</h2>
-      <p>Gerencie os cursos disponíveis.</p>
+      <p>{{ auth.possuiRole('ADMIN') ? 'Gerencie os cursos disponíveis.' : 'Consulte os cursos disponíveis.' }}</p>
     </div>
-    <a routerLink="/cursos/novo" class="button-primary">Novo curso</a>
+    @if (auth.possuiRole('ADMIN')) {
+      <a routerLink="/cursos/novo" class="button-primary">Novo curso</a>
+    }
   </header>
   @if (carregando) {
     <p>Carregando cursos...</p>
@@ -18,7 +20,7 @@
   }
   @if (cursos.length > 0) {
     <div class="id-search-panel">
-      <label for="curso-id">Buscar por ID</label>
+      <label for="curso-busca">Buscar curso</label>
       <div class="id-search-row">
         <div class="id-search-input">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -30,21 +32,20 @@
             />
           </svg>
           <input
-            id="curso-id"
+            id="curso-busca"
             type="search"
-            inputmode="numeric"
-            [(ngModel)]="filtroId"
-            placeholder="Digite o ID do curso"
+            [(ngModel)]="filtro"
+            placeholder="Digite o título ou a categoria"
           />
         </div>
-        @if (filtroId) {
+        @if (filtro) {
           <button type="button" (click)="limparFiltro()">Limpar</button>
         }
       </div>
     </div>
     @if (cursosFiltrados.length === 0) {
       <div class="empty-state filter-empty">
-        <strong>Nenhum curso encontrado</strong><span>Verifique o ID informado.</span
+        <strong>Nenhum curso encontrado</strong><span>Verifique o título ou a categoria informada.</span
         ><button type="button" (click)="limparFiltro()">Limpar filtro</button>
       </div>
     } @else {
@@ -52,7 +53,6 @@
         <table>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Título</th>
               <th>Categoria</th>
               <th>Carga horária</th>
@@ -63,9 +63,6 @@
           <tbody>
             @for (curso of cursosFiltrados; track curso.id) {
               <tr>
-                <td>
-                  <span class="table-id">#{{ curso.id }}</span>
-                </td>
                 <td>{{ curso.titulo }}</td>
                 <td>{{ curso.categoria }}</td>
                 <td>{{ curso.cargaHoraria }} horas</td>

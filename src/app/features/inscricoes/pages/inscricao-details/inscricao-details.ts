@@ -1,12 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { catchError, forkJoin, of } from 'rxjs';
 import { ReadInscricaoDto } from '../../../../shared/dtos/inscricao/ReadInscricaoDto';
 import { Status } from '../../../../shared/enums/Status.enum';
 import { CursoService } from '../../../cursos/services/curso.service';
 import { EstudanteService } from '../../../estudantes/services/estudante.service';
 import { InscricaoService } from '../../services/inscricao.service';
+import { AuthService } from '../../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-inscricao-details',
@@ -21,6 +22,7 @@ export class InscricaoDetails implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
+  readonly auth = inject(AuthService);
 
   inscricao: ReadInscricaoDto | null = null;
   curso = '';
@@ -31,20 +33,26 @@ export class InscricaoDetails implements OnInit {
   atualizandoStatus = false;
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const id = this.route.snapshot.paramMap.get('id') ?? '';
     forkJoin({
-      inscricao: this.service.buscarPorId(id),
+      inscricoes: this.service.listar(),
       cursos: this.cursoService.listar(),
-      estudantes: this.estudanteService.listar(),
+      estudantes: this.estudanteService.listar().pipe(catchError(() => of([]))),
     }).subscribe({
       next: (dados) => {
-        this.inscricao = dados.inscricao;
+        this.inscricao = dados.inscricoes.find(inscricao => String(inscricao.id) === id) ?? null;
+        if (!this.inscricao) {
+          this.mensagemErro = 'Inscrição não encontrada.';
+          this.carregando = false;
+          this.cdr.markForCheck();
+          return;
+        }
         this.curso =
-          dados.cursos.find((curso) => curso.id === dados.inscricao.cursoId)?.titulo ??
-          `Curso #${dados.inscricao.cursoId}`;
+          dados.cursos.find((curso) => curso.id === this.inscricao?.cursoId)?.titulo ??
+          'Curso não disponível';
         this.estudante =
-          dados.estudantes.find((estudante) => estudante.id === dados.inscricao.estudanteId)
-            ?.nomeCompleto ?? `Estudante #${dados.inscricao.estudanteId}`;
+          dados.estudantes.find((estudante) => estudante.id === this.inscricao?.estudanteId)
+            ?.nomeCompleto ?? 'Estudante não disponível';
         this.carregando = false;
         this.cdr.markForCheck();
       },

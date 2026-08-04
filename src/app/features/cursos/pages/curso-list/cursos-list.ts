@@ -6,6 +6,7 @@ import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { finalize, timeout } from 'rxjs';
+import { AuthService } from '../../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-cursos-list',
@@ -16,23 +17,28 @@ import { finalize, timeout } from 'rxjs';
 export class CursosList implements OnInit {
   private readonly cursoService = inject(CursoService);
   private readonly cdr = inject(ChangeDetectorRef);
+  readonly auth = inject(AuthService);
 
   cursos: ReadCursoDto[] = [];
   carregando = false;
   mensagemErro = '';
-  filtroId = '';
+  filtro = '';
 
   ngOnInit(): void {
     this.carregarCursos();
   }
 
   get cursosFiltrados(): ReadCursoDto[] {
-    const id = this.filtroId.trim();
-    return id ? this.cursos.filter((curso) => String(curso.id) === id) : this.cursos;
+    const termo = this.filtro.trim().toLocaleLowerCase('pt-BR');
+    return termo
+      ? this.cursos.filter((curso) =>
+          curso.titulo.toLocaleLowerCase('pt-BR').includes(termo)
+          || curso.categoria.toLocaleLowerCase('pt-BR').includes(termo))
+      : this.cursos;
   }
 
   limparFiltro(): void {
-    this.filtroId = '';
+    this.filtro = '';
   }
 
   carregarCursos(): void {

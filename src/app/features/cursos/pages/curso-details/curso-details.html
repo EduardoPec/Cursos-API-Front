@@ -49,6 +49,7 @@
           <small>Estudantes inscritos</small>
         </div>
       </dl>
+      @if (auth.possuiRole('ADMIN')) {
       <footer class="details-actions">
         <div>
           <strong>Ações do curso</strong><small>Edite os dados ou exclua este registro.</small>
@@ -58,6 +59,7 @@
           <button class="button-danger" type="button" (click)="excluir()">Excluir curso</button>
         </div>
       </footer>
+      }
     </article>
   }
 </section>

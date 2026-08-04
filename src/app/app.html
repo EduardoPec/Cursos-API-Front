@@ -14,19 +14,21 @@
           <span class="nav-icon">⌂</span> Dashboard
         </a>
 
-        @if (auth.possuiRole('ADMIN')) {
         <a routerLink="/cursos" routerLinkActive="active">
           <span class="nav-icon">▤</span> Cursos
         </a>
 
+        @if (auth.possuiRole('ADMIN')) {
         <a routerLink="/estudantes" routerLinkActive="active">
           <span class="nav-icon">♙</span> Estudantes
         </a>
+        }
 
         <a routerLink="/professores" routerLinkActive="active">
           <span class="nav-icon">P</span> Professores
         </a>
 
+        @if (auth.possuiRole('ADMIN')) {
         <a routerLink="/inscricoes" routerLinkActive="active">
           <span class="nav-icon">✓</span> Inscrições
         </a>

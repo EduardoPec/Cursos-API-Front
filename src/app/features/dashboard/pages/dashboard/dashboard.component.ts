@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CursoService } from '../../../cursos/services/curso.service';
 import { EstudanteService } from '../../../estudantes/services/estudante.service';
 import { InscricaoService } from '../../../inscricoes/services/inscricao.service';
-import { forkJoin } from 'rxjs';
+import { finalize, forkJoin, timeout } from 'rxjs';
 import { Status } from '../../../../shared/enums/Status.enum';
 import { AuthService } from '../../../../core/auth/auth.service';
 
@@ -42,7 +42,13 @@ export class DashboardComponent implements OnInit {
       cursos: this.cursoService.listar(),
       estudantes: this.estudanteService.listar(),
       inscricoes: this.inscricaoService.listar(),
-    }).subscribe({
+    }).pipe(
+      timeout(10000),
+      finalize(() => {
+        this.carregando = false;
+        this.cdr.markForCheck();
+      }),
+    ).subscribe({
       next: (resultado) => {
         this.totalCursos = resultado.cursos.length;
         this.totalEstudantes = resultado.estudantes.length;

@@ -19,7 +19,7 @@
       <div class="details-hero">
         <div class="details-icon">✓</div>
         <div>
-          <span>INSCRIÇÃO #{{ inscricao.id }}</span>
+          <span>INSCRIÇÃO</span>
           <h3>{{ estudante }}</h3>
           <p>{{ curso }}</p>
         </div>
@@ -32,12 +32,10 @@
         <div>
           <dt>Estudante</dt>
           <dd>{{ estudante }}</dd>
-          <small>ID {{ inscricao.estudanteId }}</small>
         </div>
         <div>
           <dt>Curso</dt>
           <dd>{{ curso }}</dd>
-          <small>ID {{ inscricao.cursoId }}</small>
         </div>
         <div>
           <dt>Data da matrícula</dt>
@@ -46,6 +44,7 @@
         </div>
       </dl>
 
+      @if (auth.possuiRole('ADMIN')) {
       <footer class="details-actions">
         <div>
     <strong>Ações da inscrição</strong>
@@ -86,6 +85,7 @@
     </button>
   </div>
       </footer>
+      }
     </article>
   }
 </section>

@@ -14,12 +14,13 @@
   @if (mensagemErro) {
     <div class="alert-error">
       {{ mensagemErro }}
+      <button type="button" (click)="carregarDashboard()">Tentar novamente</button>
     </div>
   }
 
   @if (!auth.possuiRole('ADMIN')) {
     <article class="welcome-card">
-      <div><span>ACESSO AUTENTICADO</span><h3>Bem-vindo ao CourseHub.</h3><p>Sua área específica será disponibilizada futuramente.</p></div>
+      <div><span>ACESSO DE CONSULTA</span><h3>Bem-vindo ao CourseHub.</h3><p>Use o menu para consultar os cursos e professores disponíveis.</p></div>
     </article>
   }
 

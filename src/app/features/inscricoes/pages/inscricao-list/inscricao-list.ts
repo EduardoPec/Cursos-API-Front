@@ -2,12 +2,13 @@ import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { finalize, forkJoin, timeout } from 'rxjs';
+import { catchError, finalize, forkJoin, of, timeout } from 'rxjs';
 import { InscricaoService } from '../../services/inscricao.service';
 import { CursoService } from '../../../cursos/services/curso.service';
 import { EstudanteService } from '../../../estudantes/services/estudante.service';
 import { ReadInscricaoDto } from '../../../../shared/dtos/inscricao/ReadInscricaoDto';
 import { Status } from '../../../../shared/enums/Status.enum';
+import { AuthService } from '../../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-inscricao-list',
@@ -20,12 +21,12 @@ export class InscricaoList implements OnInit {
   private readonly cursoService = inject(CursoService);
   private readonly estudanteService = inject(EstudanteService);
   private readonly cdr = inject(ChangeDetectorRef);
+  readonly auth = inject(AuthService);
   inscricoes: ReadInscricaoDto[] = [];
   cursos = new Map<number, string>();
   estudantes = new Map<number, string>();
   carregando = false;
   mensagemErro = '';
-  filtroId = '';
   filtroEstudante = '';
   readonly Status = Status;
 
@@ -34,26 +35,21 @@ export class InscricaoList implements OnInit {
   }
 
   get inscricoesFiltradas(): ReadInscricaoDto[] {
-    const id = this.filtroId.trim();
     const estudante = this.filtroEstudante.trim().toLocaleLowerCase('pt-BR');
 
     return this.inscricoes.filter((inscricao) => {
       const nomeEstudante = this.estudantes.get(inscricao.estudanteId) ?? '';
       return (
-        (!id || String(inscricao.id) === id) &&
-        (!estudante ||
-          String(inscricao.estudanteId).includes(estudante) ||
-          nomeEstudante.toLocaleLowerCase('pt-BR').includes(estudante))
+        !estudante || nomeEstudante.toLocaleLowerCase('pt-BR').includes(estudante)
       );
     });
   }
 
   get possuiFiltros(): boolean {
-    return Boolean(this.filtroId.trim() || this.filtroEstudante.trim());
+    return Boolean(this.filtroEstudante.trim());
   }
 
   limparFiltros(): void {
-    this.filtroId = '';
     this.filtroEstudante = '';
   }
 
@@ -62,7 +58,7 @@ export class InscricaoList implements OnInit {
     forkJoin({
       inscricoes: this.service.listar(),
       cursos: this.cursoService.listar(),
-      estudantes: this.estudanteService.listar(),
+      estudantes: this.estudanteService.listar().pipe(catchError(() => of([]))),
     })
       .pipe(
         timeout(10000),
